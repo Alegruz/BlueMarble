@@ -14,15 +14,6 @@
 #include <string>
 #include <vector>
 
-//#define DEBUG_CASES
-
-#ifdef DEBUG_CASES
-#define DEBUG_CASE0
-#define DEBUG_CASE1
-#define DEBUG_CASE2
-#define DEBUG_CASE3
-#endif
-
 //#define BM_USE_SFML
 
 namespace bm
