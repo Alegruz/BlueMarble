@@ -61,11 +61,7 @@ namespace bm
 			bool bIsPositionNormalized;
 			sf::Color OutlineColor;
 			float OutlineThickness = 0.0f;
-#if defined(DEBUG_CASE3)
 			sf::Font Font;
-#else	// NOT defined(DEBUG_CASE3)
-			sf::Font& Font;
-#endif	// defined(DEBUG_CASE3)
 			std::string Text;
 			size_t CharacterSizeInPixels;
 			sf::Color TextColor;
