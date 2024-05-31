@@ -36,11 +36,7 @@ namespace bm
 			, mRenderer(mWindow, mBoard)
 #endif	// defined(BM_USE_SFML)
 		{
-#ifdef DEBUG_CASE0
 			for (size_t playerIndex = 0; playerIndex < mNumPlayers; playerIndex)
-#else
-			for (size_t playerIndex = 0; playerIndex < mNumPlayers; ++playerIndex)
-#endif
 			{
 				mPlayers[playerIndex].MoveTo(0);
 			}
@@ -119,11 +115,7 @@ namespace bm
 #if defined(BM_USE_SFML)
 			mRenderer.Update(deltaTime, currentTileIndex);
 #else	// NOT defined(BM_USE_SFML)
-#ifdef DEBUG_CASE0
 			for (size_t playerIndex = 0; playerIndex < mNumPlayers; playerIndex)
-#else
-			for (size_t playerIndex = 0; playerIndex < mNumPlayers; ++playerIndex)
-#endif
 			{
 
 				Player& currentPlayer = mPlayers[playerIndex];
@@ -201,19 +193,13 @@ namespace bm
 				{
 					const size_t prevTileIndex = currentPlayer.GetCurrentTileIndex();
 					const size_t postInputTileIndex = currentPlayer.MoveBy(numTilesToMove);
-#ifdef DEBUG_CASE1
-					if (postInputTileIndex != 0 && postInputTileIndex < prevTileIndex)
-					{
-						processBegin(currentPlayer);
-					}
-#else
+
 					const size_t numCycles = ((numTilesToMove + prevTileIndex) / Tile::COUNT);
 					for (size_t cycleIndex = (postInputTileIndex == 0); cycleIndex < numCycles; ++cycleIndex)
 					{
 						logMessage("You have crossed the starting line!! You have earned your 200,000 KRW salaray!!");
 						currentPlayer.Deposit(200'000);
 					}
-#endif
 
 					Tile& postInputTile = mBoard.GetTile(postInputTileIndex);
 					const bool bResult = processTilePostInput(postInputTile, currentPlayer);
@@ -292,17 +278,10 @@ namespace bm
 				constexpr const size_t NUM_AVAILABLE_CHOICES = static_cast<size_t>(City::eOwnerChoice::COUNT);
 				const bool availableChoices[NUM_AVAILABLE_CHOICES] =
 				{
-	#ifdef DEBUG_CASE2
-					true,
-					city.GetNumVillas() < City::MAX_NUM_VILLAS,
-					city.HasBuilding() == false,
-					city.HasHotel() == false,
-	#else	// NOT DEBUG_CASE2
 					true,
 					city.GetNumVillas() < City::MAX_NUM_VILLAS && City::CITY_USAGE_FEES[cityIndex].Villa > 0 && City::CITY_USAGE_FEES[cityIndex].DoubleVilla > 0,
 					city.HasBuilding() == false && City::CITY_USAGE_FEES[cityIndex].Building > 0,
 					city.HasHotel() == false && City::CITY_USAGE_FEES[cityIndex].Hotel > 0,
-	#endif	// DEBUG_CASE2
 				};
 				bool bHasNoAvailableChoice = true;
 				for (size_t availableChoiceIndex = 1; availableChoiceIndex < NUM_AVAILABLE_CHOICES; ++availableChoiceIndex)
@@ -510,8 +489,7 @@ namespace bm
 			{
 				// Pay
 				const City::CityUsageFee& usageFee = City::CITY_USAGE_FEES[cityIndex];
-#ifdef DEBUG_CASE2
-#else
+
 				if (city.GetNumVillas() > 0)
 				{
 					assert(city.GetNumVillas() != 1 || usageFee.Villa > 0);
@@ -519,7 +497,7 @@ namespace bm
 				}
 				assert(city.HasBuilding() == false || usageFee.Building > 0);
 				assert(city.HasHotel() == false || usageFee.Hotel > 0);
-#endif
+
 				size_t totalUsageFee = usageFee.Land + city.HasBuilding() * usageFee.Building + city.HasHotel() * usageFee.Hotel;
 				const size_t numVillas = city.GetNumVillas();
 				if (numVillas == 1)
